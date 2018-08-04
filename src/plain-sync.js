@@ -1,6 +1,9 @@
 // @flow
 import qs from "query-string";
-import type { BrowserHistory as History, BrowserLocation as Location } from "history/createBrowserHistory";
+import type {
+  BrowserHistory as History,
+  BrowserLocation
+} from "history/createBrowserHistory";
 import type { Store } from "redux";
 
 type SyncObject = {
@@ -25,35 +28,100 @@ type SyncState = {
 };
 
 type Dependencies = {
-    syncObjects: Array<StatefulSyncObject>,
-    syncState: SyncState,
-    store: Store,
-    history: History,
-    updateState: ({[key: string]: any}) => void,
-}
+  syncObjects: Array<StatefulSyncObject>,
+  syncState: SyncState,
+  store: Store<any, any>,
+  history: History,
+  updateState: ({ [key: $Keys<SyncState>]: any }) => void
+};
 
-const updateLastPathnameIfNeeded = (newLoc: Location, { syncState, updateState }: Dependencies) => {
+const updateLastPathnameIfNeeded = (
+  newLoc: BrowserLocation,
+  { syncState, updateState }: Dependencies
+) => {
   if (newLoc.pathname !== syncState.lastPathname) {
     updateState({ lastPathname: undefined });
   }
 };
 
-
-const findSyncObject = (loc: Location, {syncObjects, updateState}: Dependencies) => {
+const findSyncObject = (
+  loc: BrowserLocation,
+  { syncObjects }: Dependencies
+) => {
   const syncObject = syncObjects.find(obj => obj.pathname === loc.pathname);
   if (!syncObject) return;
   syncObject.lastSearch = loc.search;
   return syncObject;
 };
 
+const createActionIfNeeded = (
+  loc: BrowserLocation,
+  syncObject: StatefulSyncObject,
+  { updateState, store }: Dependencies
+) => {
+  updateState({ ignoreStateUpdate: true });
+  if (loc.search !== syncObject.lastSearch) {
+    store.dispatch(
+      syncObject.actionCreator(
+        syncObject.parsed ? qs.parse(loc.search) : loc.search
+      )
+    );
+  }
+  updateState({ ignoreStateUpdate: false });
+};
+
+const makeHistoryListener = (dependencies: Dependencies) => (
+  loc: BrowserLocation
+) => {
+  const { syncState, updateState } = dependencies;
+  updateLastPathnameIfNeeded(loc, dependencies);
+  if (syncState.ignoreLocationUpdate) return;
+
+  updateState({ lastPathname: loc.pathname });
+  const syncObject = findSyncObject(loc, dependencies);
+  if (!syncObject) return;
+
+  createActionIfNeeded(loc, syncObject, dependencies);
+};
+
+const updateStateIfNeeded = (
+  syncObject: StatefulSyncObject,
+  { history, store, updateState }: Dependencies
+) => {
+  const state = store.getState();
+  const newSearch = syncObject.selector(state);
+
+  if (newSearch !== syncObject.lastSearch) {
+    syncObject.lastSearch = newSearch;
+    const newLocation = `${location.pathname}?${newSearch}`;
+    updateState({ ignoreLocationUpdate: true });
+    syncObject.replaceState
+      ? history.replace(newLocation)
+      : history.push(newLocation);
+    updateState({ ignoreLocationUpdate: false });
+  }
+};
+
+const makeStoreSubscriber = (dependencies: Dependencies) => () => {
+  const { syncState, history } = dependencies;
+  if (syncState.ignoreStateUpdate) return;
+
+  const syncObject = findSyncObject(history.location, dependencies);
+  if (!syncObject) return;
+
+  if (
+    syncObject.initialFrom === "location" &&
+    syncObject.lastSearch === undefined
+  )
+    return;
+
+  updateStateIfNeeded(syncObject, dependencies);
+};
+
 const plainSync = (
   store: Store<any, any>,
   syncObjects: Array<SyncObject>,
-  {
-    history
-  }: {
-    history: History
-  }
+  { history }: { history: History }
 ) => {
   let syncState = {
     ignoreLocationUpdate: false,
@@ -63,72 +131,28 @@ const plainSync = (
 
   const _syncObjects = syncObjects.map(o => ({ ...o, lastSearch: undefined }));
 
+  const updateState = (property: { [key: $Keys<SyncState>]: any }) => {
+    syncState = {
+      ...syncState,
+      ...property
+    };
+  };
+
   const dependencies = {
     syncObjects: _syncObjects,
     syncState,
     store,
     history,
-    updateState,
-  }
-
-  const findSyncObject = (loc: Location) => {
-    const syncObject = _syncObjects.find(obj => obj.pathname === loc.pathname);
-    if (!syncObject) return;
-    syncObject.lastSearch = loc.search;
-    return syncObject;
+    updateState
   };
 
-  const createActionIfNeeded = (loc: Location, syncObject: StatefulSyncObject) => {
-    syncState.ignoreStateUpdate = true;
-    if (loc.search !== syncObject.lastSearch) {
-      store.dispatch(
-        syncObject.actionCreator(
-          syncObject.parsed ? qs.parse(loc.search) : loc.search
-        )
-      );
-    }
-    syncState.ignoreStateUpdate = false;
-  };
+  const stopListeningHistory = history.listen(
+    makeHistoryListener(dependencies)
+  );
 
-  const stopListeningHistory = history.listen(loc => {
-    updateLastPathnameIfNeeded(loc);
-    if (syncState.ignoreLocationUpdate) return;
-
-    syncState.lastPathname = loc.pathname;
-    const syncObject = findSyncObject(loc);
-    if (!syncObject) return;
-
-    createActionIfNeeded(loc, syncObject);
-  });
-
-  const updateStateIfNeeded = (syncObject: StatefulSyncObject) => {
-    const state = store.getState();
-    const newSearch = syncObject.selector(state);
-    if (newSearch !== syncObject.lastSearch) {
-      syncObject.lastSearch = newSearch;
-      const newLocation = `${location.pathname}?${newSearch}`;
-      syncState.ignoreLocationUpdate = true;
-      syncObject.replaceState
-        ? history.replace(newLocation)
-        : history.push(newLocation);
-      syncState.ignoreLocationUpdate = false;
-    }
-  };
-
-  const unsubscribeFromStore = store.subscribe(() => {
-    if (syncState.ignoreStateUpdate) return;
-
-    const syncObject = findSyncObject(history.location);
-    if (!syncObject) return;
-
-    if (
-      syncObject.initialFrom === "location" &&
-      syncObject.lastSearch === undefined
-    )
-      return;
-
-    updateStateIfNeeded(syncObject);
-  });
+  const unsubscribeFromStore = store.subscribe(
+    makeStoreSubscriber(dependencies)
+  );
 
   return {
     stopListeningHistory,
