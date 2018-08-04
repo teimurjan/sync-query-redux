@@ -1,7 +1,7 @@
 // @flow
 import qs from "query-string";
-import { type BrowserHistory as History } from "history/createBrowserHistory";
-import { type Store } from "redux";
+import type { BrowserHistory as History } from "history/createBrowserHistory";
+import type { Store } from "redux";
 
 type SyncObject = {
   pathname: string,
@@ -22,22 +22,28 @@ const plainSync = (
     history: History
   }
 ) => {
-  let lastSearch;
+  let lastSearch, ignoreLocationUpdate, ignoreStateUpdate;
 
   const stopListeningHistory = history.listen(loc => {
+    if (ignoreLocationUpdate) return;
+
     const syncObject = syncObjects.find(obj => obj.pathname === loc.pathname);
     if (!syncObject) return;
 
+    lastSearch = loc.search;
+
+    ignoreStateUpdate = true;
     store.dispatch(
       syncObject.actionCreator(
         syncObject.parsed ? qs.parse(loc.search) : loc.search
       )
     );
-
-    lastSearch = loc.search;
+    ignoreStateUpdate = false;
   });
 
   const unsubscribeFromStore = store.subscribe(() => {
+    if (ignoreStateUpdate) return;
+
     const syncObject = syncObjects.find(
       obj => obj.pathname === history.location.pathname
     );
@@ -48,9 +54,11 @@ const plainSync = (
     const newSearch = syncObject.selector(state);
     if (newSearch !== lastSearch) {
       const newLocation = `${location.pathname}?${newSearch}`;
+      ignoreLocationUpdate = true;
       syncObject.replaceState
         ? history.replace(newLocation)
         : history.push(newLocation);
+      ignoreLocationUpdate = false;
     }
   });
 
