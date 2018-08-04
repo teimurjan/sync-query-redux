@@ -43,16 +43,6 @@ const updateLastPathnameIfNeeded = (
   }
 };
 
-const findSyncObject = (
-  loc: BrowserLocation,
-  { syncObjects }: Dependencies
-) => {
-  const syncObject = syncObjects.find(obj => obj.pathname === loc.pathname);
-  if (!syncObject) return;
-  syncObject.lastSearch = loc.search;
-  return syncObject;
-};
-
 const createActionIfNeeded = (
   loc: BrowserLocation,
   syncObject: StatefulSyncObject,
@@ -65,6 +55,7 @@ const createActionIfNeeded = (
         syncObject.parsed ? qs.parse(loc.search) : loc.search
       )
     );
+    syncObject.lastSearch = loc.search;
   }
   syncState.ignoreStateUpdate = false;
 };
@@ -77,7 +68,7 @@ const makeHistoryListener = (dependencies: Dependencies) => (
   if (syncState.ignoreLocationUpdate) return;
 
   syncState.lastPathname = loc.pathname;
-  const syncObject = findSyncObject(loc, dependencies);
+  const syncObject = syncObjects.find(obj => obj.pathname === loc.pathname);
   if (!syncObject) return;
 
   createActionIfNeeded(loc, syncObject, dependencies);
@@ -105,7 +96,9 @@ const makeStoreSubscriber = (dependencies: Dependencies) => () => {
   const { syncState, history } = dependencies;
   if (syncState.ignoreStateUpdate) return;
 
-  const syncObject = findSyncObject(history.location, dependencies);
+  const syncObject = syncObjects.find(
+    obj => obj.pathname === history.location.pathname
+  );
   if (!syncObject) return;
 
   if (

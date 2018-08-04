@@ -31,7 +31,7 @@ type Dependencies = {
   syncObjects: Array<StatefulSyncObject>,
   syncState: SyncState,
   store: Store<any, any>,
-  history: History,
+  history: History
 };
 
 const updateLastPathnameIfNeeded = (
@@ -76,7 +76,7 @@ const makeHistoryListener = (dependencies: Dependencies) => (
   updateLastPathnameIfNeeded(loc, dependencies);
   if (syncState.ignoreLocationUpdate) return;
 
-  syncState.lastPathname= loc.pathname;
+  syncState.lastPathname = loc.pathname;
   const syncObject = findSyncObject(loc, dependencies);
   if (!syncObject) return;
 
@@ -92,12 +92,12 @@ const updateStateIfNeeded = (
 
   if (newSearch !== syncObject.lastSearch) {
     syncObject.lastSearch = newSearch;
-    const newLocation = `${location.pathname}?${newSearch}`;
-  syncState.ignoreLocationUpdate = true;
+    const newLocation = `${location.pathname}${newSearch}`;
+    syncState.ignoreLocationUpdate = true;
     syncObject.replaceState
       ? history.replace(newLocation)
       : history.push(newLocation);
-  syncState.ignoreLocationUpdate = false;
+    syncState.ignoreLocationUpdate = false;
   }
 };
 
@@ -134,7 +134,7 @@ const plainSync = (
     syncObjects: _syncObjects,
     syncState,
     store,
-    history,
+    history
   };
 
   const stopListeningHistory = history.listen(
