@@ -63,7 +63,7 @@ const createActionIfNeeded = (
 const makeHistoryListener = (dependencies: Dependencies) => (
   loc: BrowserLocation
 ) => {
-  const { syncState } = dependencies;
+  const { syncState, syncObjects } = dependencies;
   updateLastPathnameIfNeeded(loc, dependencies);
   if (syncState.ignoreLocationUpdate) return;
 
@@ -93,7 +93,7 @@ const updateStateIfNeeded = (
 };
 
 const makeStoreSubscriber = (dependencies: Dependencies) => () => {
-  const { syncState, history } = dependencies;
+  const { syncState, history, syncObjects } = dependencies;
   if (syncState.ignoreStateUpdate) return;
 
   const syncObject = syncObjects.find(
