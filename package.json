@@ -1,6 +1,6 @@
 {
   "name": "sync-query-redux",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Synchronise redux state with URL query parameters.",
   "main": "lib/index.js",
   "scripts": {
@@ -38,14 +38,12 @@
     "flow-bin": "^0.78.0",
     "flow-copy-source": "^2.0.2",
     "flow-typed": "^2.5.1",
-    "jest": "^23.4.2",
-    "redux": "^4.0.0"
+    "jest": "^23.4.2"
   },
   "files": [
     "lib"
   ],
   "dependencies": {
-    "history": "^4.7.2",
     "query-string": "^6.1.0"
   },
   "jest": {

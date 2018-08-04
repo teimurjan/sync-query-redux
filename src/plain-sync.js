@@ -1,8 +1,6 @@
 // @flow
 import qs from "query-string";
-import createHistory, {
-  type BrowserHistory as History
-} from "history/createBrowserHistory";
+import { type BrowserHistory as History } from "history/createBrowserHistory";
 import { type Store } from "redux";
 
 type SyncObject = {
@@ -19,9 +17,9 @@ const plainSync = (
   store: Store<any, any>,
   syncObjects: Array<SyncObject>,
   {
-    history = createHistory()
+    history
   }: {
-    history?: History
+    history: History
   }
 ) => {
   let lastSearch;
