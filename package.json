@@ -1,0 +1,61 @@
+{
+  "name": "sync-query-redux",
+  "version": "0.0.1",
+  "description": "Synchronise redux state with URL query parameters.",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "node ./scripts/test.js --env=jsdom",
+    "prepack": "flow && npm run test && npm run prepack:babel && npm run prepack:flow",
+    "prepack:babel": "babel src/ -d lib",
+    "prepack:flow": "flow-copy-source src lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teimurjan/sync-query-redux.git"
+  },
+  "keywords": [
+    "redux",
+    "sync",
+    "url",
+    "query",
+    "location",
+    "search",
+    "parameters"
+  ],
+  "author": "teimurjan <teymurgg321@gmail.com> (https://teimurjan.github.io)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/teimurjan/sync-query-redux/issues"
+  },
+  "homepage": "https://github.com/teimurjan/sync-query-redux#readme",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-jest": "^23.4.2",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "flow-bin": "^0.78.0",
+    "flow-copy-source": "^2.0.2",
+    "flow-typed": "^2.5.1",
+    "jest": "^23.4.2",
+    "redux": "^4.0.0"
+  },
+  "files": [
+    "lib"
+  ],
+  "dependencies": {
+    "history": "^4.7.2",
+    "query-string": "^6.1.0"
+  },
+  "jest": {
+    "testEnvironment": "jsdom",
+    "testURL": "http://localhost",
+    "transform": {
+      "^.+\\.(js)$": "<rootDir>/node_modules/babel-jest"
+    },
+    "testMatch": [
+      "<rootDir>/__tests__/**/*.js"
+    ]
+  }
+}
