@@ -22,27 +22,31 @@ const plainSync = (
     history: History
   }
 ) => {
-  let lastSearch, ignoreLocationUpdate, ignoreStateUpdate;
+  const state = {
+    lastSearch: undefined,
+    ignoreLocationUpdate: false,
+    ignoreStateUpdate: false
+  };
 
   const stopListeningHistory = history.listen(loc => {
-    if (ignoreLocationUpdate) return;
+    if (state.ignoreLocationUpdate) return;
 
     const syncObject = syncObjects.find(obj => obj.pathname === loc.pathname);
     if (!syncObject) return;
 
-    lastSearch = loc.search;
+    state.lastSearch = loc.search;
 
-    ignoreStateUpdate = true;
+    state.ignoreStateUpdate = true;
     store.dispatch(
       syncObject.actionCreator(
         syncObject.parsed ? qs.parse(loc.search) : loc.search
       )
     );
-    ignoreStateUpdate = false;
+    state.ignoreStateUpdate = false;
   });
 
   const unsubscribeFromStore = store.subscribe(() => {
-    if (ignoreStateUpdate) return;
+    if (state.ignoreStateUpdate) return;
 
     const syncObject = syncObjects.find(
       obj => obj.pathname === history.location.pathname
@@ -53,12 +57,13 @@ const plainSync = (
     const state = store.getState();
     const newSearch = syncObject.selector(state);
     if (newSearch !== lastSearch) {
+      state.lastSearch = newSearch;
       const newLocation = `${location.pathname}?${newSearch}`;
-      ignoreLocationUpdate = true;
+      state.ignoreLocationUpdate = true;
       syncObject.replaceState
         ? history.replace(newLocation)
         : history.push(newLocation);
-      ignoreLocationUpdate = false;
+      state.ignoreLocationUpdate = false;
     }
   });
 
