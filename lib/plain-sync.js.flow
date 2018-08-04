@@ -22,27 +22,31 @@ const plainSync = (
     history: History
   }
 ) => {
-  let lastSearch, ignoreLocationUpdate, ignoreStateUpdate;
+  const syncState = {
+    lastSearch: undefined,
+    ignoreLocationUpdate: false,
+    ignoreStateUpdate: false
+  };
 
   const stopListeningHistory = history.listen(loc => {
-    if (ignoreLocationUpdate) return;
+    if (syncState.ignoreLocationUpdate) return;
 
     const syncObject = syncObjects.find(obj => obj.pathname === loc.pathname);
     if (!syncObject) return;
 
-    lastSearch = loc.search;
+    syncState.lastSearch = loc.search;
 
-    ignoreStateUpdate = true;
+    syncState.ignoreStateUpdate = true;
     store.dispatch(
       syncObject.actionCreator(
         syncObject.parsed ? qs.parse(loc.search) : loc.search
       )
     );
-    ignoreStateUpdate = false;
+    syncState.ignoreStateUpdate = false;
   });
 
   const unsubscribeFromStore = store.subscribe(() => {
-    if (ignoreStateUpdate) return;
+    if (syncState.ignoreStateUpdate) return;
 
     const syncObject = syncObjects.find(
       obj => obj.pathname === history.location.pathname
@@ -52,13 +56,14 @@ const plainSync = (
 
     const state = store.getState();
     const newSearch = syncObject.selector(state);
-    if (newSearch !== lastSearch) {
+    if (newSearch !== syncState.lastSearch) {
+      syncState.lastSearch = newSearch;
       const newLocation = `${location.pathname}?${newSearch}`;
-      ignoreLocationUpdate = true;
+      syncState.ignoreLocationUpdate = true;
       syncObject.replaceState
         ? history.replace(newLocation)
         : history.push(newLocation);
-      ignoreLocationUpdate = false;
+      syncState.ignoreLocationUpdate = false;
     }
   });
 
