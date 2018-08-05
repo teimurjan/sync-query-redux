@@ -24,10 +24,11 @@ plainSync(
   store,
   [
     {
-      pathname: "/all",
+      pathname: "/",
       actionCreator: setCounter,
       selector: state => `?counter=${state}`,
-      parsed: true
+      parsed: true,
+      initialFrom: 'state',
     }
   ],
   {
