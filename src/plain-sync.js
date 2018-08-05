@@ -141,9 +141,9 @@ const plainSync = (
     makeStoreSubscriber(dependencies)
   );
 
-  return {
-    stopListeningHistory,
-    unsubscribeFromStore
+  return () => {
+    stopListeningHistory(),
+    unsubscribeFromStore()
   };
 };
 
