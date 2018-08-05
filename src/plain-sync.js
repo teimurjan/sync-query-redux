@@ -98,7 +98,9 @@ const makeStoreSubscriber = (dependencies: Dependencies) => () => {
 
   const { initialFrom = "location", lastQueryString } = syncObject;
 
-  if (initialFrom === "location" && lastQueryString === undefined) return;
+  if (initialFrom === "location" && lastQueryString === undefined) {
+    createActionIfNeeded(history.location, syncObject, dependencies);
+  };
 
   updateStateIfNeeded(syncObject, dependencies);
 };
