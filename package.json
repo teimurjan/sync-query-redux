@@ -1,6 +1,6 @@
 {
   "name": "sync-query-redux",
-  "version": "0.0.11",
+  "version": "0.0.13",
   "description": "Synchronise redux state with URL query parameters.",
   "main": "lib/index.js",
   "scripts": {
@@ -24,7 +24,7 @@
     "parameters"
   ],
   "author": "teimurjan <teymurgg321@gmail.com> (https://teimurjan.github.io)",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/teimurjan/sync-query-redux/issues"
   },

@@ -98,9 +98,10 @@ const makeStoreSubscriber = (dependencies: Dependencies) => () => {
 
   const { initialFrom = "location", lastQueryString } = syncObject;
 
-  if (initialFrom === "location" && lastQueryString === undefined) {
+  const isFirstChange = lastQueryString === undefined;
+  if (initialFrom === "location" && isFirstChange) {
     createActionIfNeeded(history.location, syncObject, dependencies);
-  };
+  }
 
   updateStateIfNeeded(syncObject, dependencies);
 };
@@ -133,17 +134,17 @@ const plainSync = (
     history
   };
 
-  const stopListeningHistory = history.listen(
-    makeHistoryListener(dependencies)
-  );
+  const historyListener = makeHistoryListener(dependencies);
+  const storeSubscriber = makeStoreSubscriber(dependencies);
 
-  const unsubscribeFromStore = store.subscribe(
-    makeStoreSubscriber(dependencies)
-  );
+  const stopListeningHistory = history.listen(historyListener);
+  const unsubscribeFromStore = store.subscribe(storeSubscriber);
+
+  storeSubscriber();
 
   return () => {
-    stopListeningHistory(),
-    unsubscribeFromStore()
+    stopListeningHistory();
+    unsubscribeFromStore();
   };
 };
 
