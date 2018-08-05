@@ -1,6 +1,6 @@
 {
   "name": "sync-query-redux",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Synchronise redux state with URL query parameters.",
   "main": "lib/index.js",
   "scripts": {
@@ -54,7 +54,7 @@
       "^.+\\.(js)$": "<rootDir>/node_modules/babel-jest"
     },
     "testMatch": [
-      "<rootDir>/__tests__/**/*.js"
+      "<rootDir>/__tests__/**/*.test.js"
     ]
   }
 }
