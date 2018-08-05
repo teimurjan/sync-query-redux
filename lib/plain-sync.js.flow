@@ -64,7 +64,8 @@ const makeHistoryListener = (dependencies: Dependencies) => (
 ) => {
   const { syncState, syncObjects } = dependencies;
   updateLastPathnameIfNeeded(loc, dependencies);
-  if (loc.state.isInvokedByStateSubscriber) return;
+
+  if (loc.state && loc.state.isInvokedByStateSubscriber) return;
 
   syncState.lastPathname = loc.pathname;
   const syncObject = syncObjects[loc.pathname];
