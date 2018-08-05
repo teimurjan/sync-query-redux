@@ -2,7 +2,7 @@
 The library is created for easily synchronization between URL query params and redux state.
 Inspired by [redux-query-sync](https://github.com/Treora/redux-query-sync).
 
-# Installation
+## Installation
 Installation can be done with [npm](https://www.npmjs.com/)
 
 ```sh
@@ -15,8 +15,8 @@ or [yarn](https://yarnpkg.com/en/)
 yarn add sync-query-redux
 ```
 
-# Usage
-## plain-sync
+## Usage
+### plain-sync
 ```javascript
 import { plainSync } from "sync-query-redux";
 import createHistory from "history/createBrowserHistory";
@@ -40,15 +40,26 @@ const cancelSynchronization = plainSync(
 
 The first parameter is the redux store. Second is the list of objects which I call `SyncObject`. You can pass as many sync objects as you want for synchronization. Third parameter is options object which requires only one `history` object of type `BrowserHistory`. After calling `plainSync` all passed sync objects will be in sync with you redux state. As the return value you receive the `cancel` function to stop the synchronization.
 
-# API
-## plain-sync
+Working example can be found [here](./examples/plain-sync). You just need to run:
+```sh
+npm i
+npm run start
+```
+or with yarn
+```sh
+yarn
+yarn start
+```
+
+## API
+### plain-sync
 | Parameter   | Type                                          | Description                                                                                                                         |
 | ----------- | :-------------------------------------------: | ----------------------------------------------------------------------------------------------------------------------------------- |
 | store       | [Redux Store](https://redux.js.org/api/store) | Redux store object.                                                                                                                 |
 | syncObjects | Array of `SyncObject`.                        | Description of `SyncObject` is given below.                                                                                         |
 | options     | `{ history: BrowserHistory }`                 | Options is the extra dependencies needed for the correct work of the library. For `plainSync` we need only `history` as dependency. |
 
-### SyncObject
+#### SyncObject
 Here is an interface of `SyncObject`
 ```javascript
 type SyncObject = {
@@ -72,15 +83,15 @@ type SyncObject = {
 | initialFrom   | Determines from where to get the initial state: whether from your current query parameters(location) or from your redux state(state)                                                                                       |
 |               |
 
-# Plans
+## Plans
 * Add more tests
 * Add module params-sync in which `SyncObject` will not have selector and actionCreator, but a list of params where each param will have its selector and its actionCreator.
 * Add one-side sync modules(listening only store/history).
 * Make library available like a redux middleware
 
-# Contributions
+## Contributions
 Contributors are welcome. Please discuss new features and submit PRs for bug fixes with tests.
 Run `npm run build` which detects type errors, tests passing status and build the lib if everything is well.
 
-# License
+## License
 [MIT](./blob/master/LICENSE.md)

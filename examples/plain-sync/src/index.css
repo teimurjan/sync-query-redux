@@ -1,0 +1,39 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background: linear-gradient(0deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);
+  color: white;
+}
+
+.container {
+  padding: 10px;
+  text-align: center;
+}
+
+.container .value {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.container button {
+  color: white;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 10px;
+  background: transparent;
+  margin: 5px;
+  transition: all 200ms linear;
+}
+
+.container button:hover {
+    color: black;
+    border-color: black;
+    background: white;
+  }
+  

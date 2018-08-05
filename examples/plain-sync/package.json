@@ -9,7 +9,7 @@
     "react-redux": "^5.0.7",
     "react-scripts": "1.1.4",
     "redux": "^4.0.0",
-    "sync-query-redux": "^0.0.11"
+    "sync-query-redux": "0.0.13"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -3,11 +3,12 @@ import ReactDOM from "react-dom";
 import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import { createLogger } from "redux-logger";
-import { plainSync } from 'sync-query-redux';
+import { plainSync } from "sync-query-redux";
 import createHistory from "history/createBrowserHistory";
 import App from "./App";
 import { setCounter } from "./actions";
 import { counter } from "./reducer";
+import "./index.css";
 
 const history = createHistory();
 
@@ -19,7 +20,7 @@ const loggerMiddleware = createLogger({
 
 const store = createStore(counter, applyMiddleware(loggerMiddleware));
 
-syncs.plainSync(
+plainSync(
   store,
   [
     {
