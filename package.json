@@ -1,11 +1,11 @@
 {
   "name": "sync-query-redux",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Synchronise redux state with URL query parameters.",
   "main": "lib/index.js",
   "scripts": {
     "test": "node ./scripts/test.js --env=jsdom",
-    "build": "flow && npm run test && npm run prepack:babel && npm run prepack:flow",
+    "build": "flow && npm run test && rm -rf lib && npm run prepack:babel && npm run prepack:flow",
     "prepack": "npm run build",
     "prepack:babel": "babel src/ -d lib",
     "prepack:flow": "flow-copy-source src lib"
