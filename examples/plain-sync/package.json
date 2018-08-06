@@ -19,5 +19,6 @@
   },
   "devDependencies": {
     "redux-logger": "^3.0.6"
-  }
+  },
+  "homepage": "https://teimurjan.github.io/sync-query-redux"
 }
