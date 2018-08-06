@@ -20,15 +20,19 @@ const loggerMiddleware = createLogger({
 
 const store = createStore(counter, applyMiddleware(loggerMiddleware));
 
+export const LISTENING_PATH = '/'
+export const INITIAL_FROM = 'state'
+
 plainSync(
   store,
   [
     {
-      pathname: "/",
+      pathname: LISTENING_PATH,
       actionCreator: setCounter,
       selector: state => `?counter=${state}`,
       parsed: true,
-      initialFrom: 'state',
+      initialFrom: INITIAL_FROM,
+      replaceState: true,
     }
   ],
   {

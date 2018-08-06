@@ -9,6 +9,7 @@ body {
 body {
   background: linear-gradient(0deg, #0fb8ad 0%, #1fc8db 51%, #2cb5e8 75%);
   color: white;
+  font-family: "Roboto", sans-serif;
 }
 
 .container {
@@ -32,8 +33,21 @@ body {
 }
 
 .container button:hover {
-    color: black;
-    border-color: black;
-    background: white;
-  }
-  
+  color: black;
+  border-color: black;
+  background: white;
+}
+
+.container .help-info {
+  margin-top: 5rem;
+  font-weight: bold;
+  line-height: 1.5;
+  border: 1px solid white;
+  padding: 10px;
+}
+.status {
+  color: black;
+}
+.status a {
+  color: inherit;
+}
