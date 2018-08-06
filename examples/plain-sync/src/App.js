@@ -4,19 +4,22 @@ import { bindActionCreators } from "redux";
 import { increment, decrement } from "./actions";
 import { LISTENING_PATH } from ".";
 
+const getFullUrl = urlPart => `${process.env.PUBLIC_URL}${urlPart}`;
 class App extends Component {
   render() {
     const { value, increment, decrement } = this.props;
+    const syncPath = getFullUrl(LISTENING_PATH);
+    const isSyncPath = getFullUrl(window.location.pathname) === syncPath;
     return (
       <div className="container">
         <p className="value">State value is: {value}</p>
         <button onClick={increment}>INCREMENT</button>
         <button onClick={decrement}>DECREMENT</button>
         <p className="status">
-          {window.location.pathname === LISTENING_PATH ? (
+          {isSyncPath ? (
             "SYNCED"
           ) : (
-            <a href={LISTENING_PATH}>NOT SYNCED. GO TO THE LISTENING PATH.</a>
+            <a href={syncPath}>NOT SYNCED. GO TO THE LISTENING PATH.</a>
           )}
         </p>
         <div className="help-info">
