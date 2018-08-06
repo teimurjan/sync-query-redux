@@ -1,6 +1,6 @@
 {
   "name": "sync-query-redux",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Synchronise redux state with URL query parameters.",
   "main": "lib/index.js",
   "scripts": {
@@ -46,7 +46,7 @@
     "lib"
   ],
   "dependencies": {
-    "query-string": "^6.1.0"
+    "qs": "^6.5.2"
   },
   "jest": {
     "testEnvironment": "jsdom",

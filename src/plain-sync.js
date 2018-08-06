@@ -1,5 +1,5 @@
 // @flow
-import qs from "query-string";
+import qs from "qs";
 import type {
   BrowserHistory as History,
   BrowserLocation
