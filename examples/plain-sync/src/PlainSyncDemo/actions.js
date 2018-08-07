@@ -6,10 +6,7 @@ export const ActionTypes = {
 
 export const increment = () => ({ type: ActionTypes.INCREMENT });
 export const decrement = () => ({ type: ActionTypes.DECREMENT });
-export const setCounter = ({ counter: counterStr }) => {
-  console.log(counterStr);
-  return {
-    type: ActionTypes.SET_COUNTER,
-    counter: parseInt(counterStr, 10)
-  };
-};
+export const setCounter = ({ counter: counterStr }) => ({
+  type: ActionTypes.SET_COUNTER,
+  counter: parseInt(counterStr, 10)
+});

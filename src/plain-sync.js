@@ -40,8 +40,6 @@ export const handlePathnameChange = (
   if (newLoc.pathname !== syncState.lastPathname) {
     const lastSyncObject = syncObjects[syncState.lastPathname || ''];
     if (lastSyncObject) lastSyncObject.lastQueryString = undefined;
-    syncState.lastPathname = undefined;
-  } else {
     syncState.lastPathname = newLoc.pathname;
   }
 };
@@ -124,7 +122,7 @@ const plainSync = (
 ) => {
   const syncState = {
     ignoreStateUpdate: false,
-    lastPathname: undefined
+    lastPathname: history.location.pathname,
   };
 
   const statefulSyncObjects = syncObjects.reduce(

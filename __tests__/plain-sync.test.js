@@ -66,7 +66,7 @@ describe("plainSync module test", () => {
     expect(dependencies.syncState.lastPathname).toEqual(lastPathname);
     expect(dependencies.syncObjects[lastPathname].lastQueryString).toEqual("");
     handlePathnameChange(location, dependencies);
-    expect(dependencies.syncState.lastPathname).toBeUndefined();
+    expect(dependencies.syncState.lastPathname).toEqual(location.pathname);
     expect(dependencies.syncObjects[lastPathname].lastQueryString).toEqual(
       undefined
     );
