@@ -87,7 +87,7 @@ const handleStateChange = (
   const state = store.getState();
   const value = syncObject.selector(state);
   const newQueryString = syncObject.stringifyState
-    ? qs.stringify(value)
+    ? `?${qs.stringify(value)}`
     : value;
 
   if (newQueryString !== syncObject.lastQueryString) {

@@ -21,7 +21,7 @@ const loggerMiddleware = createLogger({
 
 const store = createStore(rootReducer, applyMiddleware(loggerMiddleware));
 
-export const PLAIN_SYNC_PATH = `${process.env.PUBLIC_URL}/plain-sync`
+export const PLAIN_SYNC_PATH = `${process.env.PUBLIC_URL}/plain-sync`;
 
 plainSync(
   store,
@@ -29,8 +29,9 @@ plainSync(
     {
       pathname: PLAIN_SYNC_PATH,
       actionCreator: setCounter,
-      selector: state => `?counter=${state.plainSyncCounter}`,
-      parsed: true,
+      selector: state => ({ counter: state.plainSyncCounter }),
+      parseQuery: true,
+      stringifyState: true,
       initialFrom: "state",
       replaceState: true
     }
