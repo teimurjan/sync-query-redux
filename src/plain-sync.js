@@ -12,7 +12,8 @@ type SyncObject = {
     search: string | Object
   ) => { type: string, [key: string]: any },
   selector: (state: Object) => any,
-  parsed?: boolean,
+  parseQuery?: boolean,
+  stringifyState?: boolean,
   replaceState?: boolean,
   initialFrom?: "location" | "state"
 };
@@ -38,24 +39,21 @@ export const handlePathnameChange = (
   { syncState, syncObjects }: Dependencies
 ) => {
   if (newLoc.pathname !== syncState.lastPathname) {
-    const lastSyncObject = syncObjects[syncState.lastPathname || ''];
+    const lastSyncObject = syncObjects[syncState.lastPathname || ""];
     if (lastSyncObject) lastSyncObject.lastQueryString = undefined;
     syncState.lastPathname = newLoc.pathname;
   }
 };
 
-const createActionIfNeeded = (
+const handleHistoryChange = (
   loc: BrowserLocation,
   syncObject: StatefulSyncObject,
   { syncState, store }: Dependencies
 ) => {
   syncState.ignoreStateUpdate = true;
   if (loc.search !== syncObject.lastQueryString) {
-    store.dispatch(
-      syncObject.actionCreator(
-        syncObject.parsed ? qs.parse(loc.search) : loc.search
-      )
-    );
+    const value = syncObject.parseQuery ? qs.parse(loc.search) : loc.search;
+    store.dispatch(syncObject.actionCreator(value));
     syncObject.lastQueryString = loc.search;
   }
   syncState.ignoreStateUpdate = false;
@@ -76,18 +74,21 @@ const makeHistoryListener = (dependencies: Dependencies) => (
 
   const isFirstChange = lastQueryString === undefined;
   if (initialFrom === "state" && isFirstChange) {
-    updateStateIfNeeded(syncObject, dependencies);
+    handleStateChange(syncObject, dependencies);
   } else {
-    createActionIfNeeded(loc, syncObject, dependencies);
+    handleHistoryChange(loc, syncObject, dependencies);
   }
 };
 
-const updateStateIfNeeded = (
+const handleStateChange = (
   syncObject: StatefulSyncObject,
   { history, store, syncState }: Dependencies
 ) => {
   const state = store.getState();
-  const newQueryString = syncObject.selector(state);
+  const value = syncObject.selector(state);
+  const newQueryString = syncObject.stringifyState
+    ? qs.stringify(value)
+    : value;
 
   if (newQueryString !== syncObject.lastQueryString) {
     syncObject.lastQueryString = newQueryString;
@@ -109,9 +110,9 @@ const makeStoreSubscriber = (dependencies: Dependencies) => () => {
 
   const isFirstChange = lastQueryString === undefined;
   if (initialFrom === "location" && isFirstChange) {
-    createActionIfNeeded(history.location, syncObject, dependencies);
+    handleHistoryChange(history.location, syncObject, dependencies);
   } else {
-    updateStateIfNeeded(syncObject, dependencies);
+    handleStateChange(syncObject, dependencies);
   }
 };
 
@@ -122,7 +123,7 @@ const plainSync = (
 ) => {
   const syncState = {
     ignoreStateUpdate: false,
-    lastPathname: history.location.pathname,
+    lastPathname: history.location.pathname
   };
 
   const statefulSyncObjects = syncObjects.reduce(
