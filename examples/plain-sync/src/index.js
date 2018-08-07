@@ -21,7 +21,7 @@ const loggerMiddleware = createLogger({
 
 const store = createStore(rootReducer, applyMiddleware(loggerMiddleware));
 
-export const PLAIN_SYNC_PATH = "/plain-sync";
+export const PLAIN_SYNC_PATH = `${process.env.PUBLIC_URL}/plain-sync`
 
 plainSync(
   store,

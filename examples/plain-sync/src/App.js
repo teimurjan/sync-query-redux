@@ -10,7 +10,7 @@ class App extends Component {
     return (
         <Switch>
           <Route exact path={PUBLIC_URL} component={Main} />
-          <Route path={`${PUBLIC_URL}${PLAIN_SYNC_PATH}`} component={PlainSyncDemo} />
+          <Route path={PLAIN_SYNC_PATH} component={PlainSyncDemo} />
         </Switch>
     );
   }
