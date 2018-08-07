@@ -6531,9 +6531,9 @@ symbol-tree@^3.2.1:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.2.2.tgz#ae27db38f660a7ae2e1c3b7d1bc290819b8519e6"
 
-sync-query-redux@0.0.20:
-  version "0.0.20"
-  resolved "https://registry.yarnpkg.com/sync-query-redux/-/sync-query-redux-0.0.20.tgz#e6ed2b2d4b602785217bb0c57e20c711d1ea27b7"
+sync-query-redux@0.0.21:
+  version "0.0.21"
+  resolved "https://registry.yarnpkg.com/sync-query-redux/-/sync-query-redux-0.0.21.tgz#d8489d9d74768d319d8e62de8aa5355c2e68db98"
   dependencies:
     qs "^6.5.2"
 
