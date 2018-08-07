@@ -1,6 +1,6 @@
 {
   "name": "sync-query-redux",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "description": "Synchronise redux state with URL query parameters.",
   "main": "lib/index.js",
   "scripts": {
@@ -8,7 +8,8 @@
     "build": "flow && npm run test && rm -rf lib && npm run prepack:babel && npm run prepack:flow",
     "prepack": "npm run build",
     "prepack:babel": "babel src/ -d lib",
-    "prepack:flow": "flow-copy-source src lib"
+    "prepack:flow": "flow-copy-source src lib",
+    "postpublish": "git add . && git commit -m \"$COMMIT_MSG\" && git push"
   },
   "repository": {
     "type": "git",

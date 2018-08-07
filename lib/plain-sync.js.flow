@@ -33,12 +33,16 @@ type Dependencies = {
   history: History
 };
 
-export const updateLastPathnameIfNeeded = (
+export const handlePathnameChange = (
   newLoc: BrowserLocation,
-  { syncState }: Dependencies
+  { syncState, syncObjects }: Dependencies
 ) => {
   if (newLoc.pathname !== syncState.lastPathname) {
+    const lastSyncObject = syncObjects[syncState.lastPathname || ''];
+    if (lastSyncObject) lastSyncObject.lastQueryString = undefined;
     syncState.lastPathname = undefined;
+  } else {
+    syncState.lastPathname = newLoc.pathname;
   }
 };
 
@@ -63,15 +67,21 @@ const makeHistoryListener = (dependencies: Dependencies) => (
   loc: BrowserLocation
 ) => {
   const { syncState, syncObjects } = dependencies;
-  updateLastPathnameIfNeeded(loc, dependencies);
+  handlePathnameChange(loc, dependencies);
 
   if (loc.state && loc.state.isInvokedByStateSubscriber) return;
 
-  syncState.lastPathname = loc.pathname;
   const syncObject = syncObjects[loc.pathname];
   if (!syncObject) return;
 
-  createActionIfNeeded(loc, syncObject, dependencies);
+  const { initialFrom = "location", lastQueryString } = syncObject;
+
+  const isFirstChange = lastQueryString === undefined;
+  if (initialFrom === "state" && isFirstChange) {
+    updateStateIfNeeded(syncObject, dependencies);
+  } else {
+    createActionIfNeeded(loc, syncObject, dependencies);
+  }
 };
 
 const updateStateIfNeeded = (
@@ -102,9 +112,9 @@ const makeStoreSubscriber = (dependencies: Dependencies) => () => {
   const isFirstChange = lastQueryString === undefined;
   if (initialFrom === "location" && isFirstChange) {
     createActionIfNeeded(history.location, syncObject, dependencies);
+  } else {
+    updateStateIfNeeded(syncObject, dependencies);
   }
-
-  updateStateIfNeeded(syncObject, dependencies);
 };
 
 const plainSync = (

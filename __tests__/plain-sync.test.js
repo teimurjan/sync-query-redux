@@ -1,5 +1,5 @@
 // @flow
-import plainSync, { updateLastPathnameIfNeeded } from "../src/plain-sync";
+import plainSync, { handlePathnameChange } from "../src/plain-sync";
 import { getHistoryStub } from "./utils";
 
 describe("plainSync module test", () => {
@@ -25,7 +25,7 @@ describe("plainSync module test", () => {
     expect(store.subscribe).toHaveBeenCalled();
   });
 
-  it("updates last pathname correctly", () => {
+  it("handles pathname change correctly", () => {
     const location = {
       pathname: "/",
       search: "",
@@ -33,12 +33,18 @@ describe("plainSync module test", () => {
       state: {},
       key: ""
     };
-    const lastPathname = '/lastpathname';
+    const lastPathname = "/lastpathname";
     const pathname = "/path";
     const dependencies = {
       syncObjects: {
         [pathname]: {
-          pathname: "/path",
+          pathname,
+          actionCreator: jest.fn(),
+          selector: jest.fn(),
+          lastQueryString: ""
+        },
+        [lastPathname]: {
+          pathname: lastPathname,
           actionCreator: jest.fn(),
           selector: jest.fn(),
           lastQueryString: ""
@@ -58,7 +64,11 @@ describe("plainSync module test", () => {
     };
 
     expect(dependencies.syncState.lastPathname).toEqual(lastPathname);
-    updateLastPathnameIfNeeded(location, dependencies);
+    expect(dependencies.syncObjects[lastPathname].lastQueryString).toEqual("");
+    handlePathnameChange(location, dependencies);
     expect(dependencies.syncState.lastPathname).toBeUndefined();
+    expect(dependencies.syncObjects[lastPathname].lastQueryString).toEqual(
+      undefined
+    );
   });
 });

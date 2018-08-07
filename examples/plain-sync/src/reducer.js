@@ -1,13 +1,17 @@
-import { ActionTypes } from "./actions";
+import { ActionTypes as PlainSyncActionTypes } from "./PlainSyncDemo/actions";
 
-export const counter = (state = 0, action) => {
+const initialState = {
+  plainSyncCounter: 0
+};
+
+export const rootReducer = (state = initialState, action) => {
   switch (action.type) {
-    case ActionTypes.INCREMENT:
-      return state + 1;
-    case ActionTypes.DECREMENT:
-      return state - 1;
-    case ActionTypes.SET_COUNTER:
-      return action.value;
+    case PlainSyncActionTypes.INCREMENT:
+      return { plainSyncCounter: state.plainSyncCounter + 1 };
+    case PlainSyncActionTypes.DECREMENT:
+      return { plainSyncCounter: state.plainSyncCounter - 1 };
+    case PlainSyncActionTypes.SET_COUNTER:
+      return { plainSyncCounter: action.counter };
     default:
       return state;
   }

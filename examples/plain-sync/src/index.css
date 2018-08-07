@@ -38,16 +38,6 @@ body {
   background: white;
 }
 
-.container .help-info {
-  margin-top: 5rem;
-  font-weight: bold;
-  line-height: 1.5;
-  border: 1px solid white;
-  padding: 10px;
-}
-.status {
-  color: black;
-}
-.status a {
-  color: inherit;
+.main-router a {
+ color: white;
 }
