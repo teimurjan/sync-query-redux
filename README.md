@@ -81,7 +81,7 @@ type SyncObject = {
 | selector       | A function which receives your redux state as parameter and returns new query string built from the state.                                                                                                                 |
 | parseQuery     | Flag determines whether to pass `newQuery` to `actionCreator` as parsed object(using [qs library](https://www.npmjs.com/package/qs)) or as a plain string.                                                                 |
 | stringifyState | Flag determines whether to stringify value from `selector`(using [qs library](https://www.npmjs.com/package/qs)) or not.                                                                                                   |
-| replaceState   | If `false`  query changes will be saved to the history(you'll have the possibility to go back to the previous query state). Otherwise you'll be moved to the previouse pathname ignoring all the query parameters changes. |
+| replaceState   | If `false`  query changes will be saved to the history(you'll have the possibility to go back to the previous query state). Otherwise you'll be moved to the previous pathname ignoring all the query parameters changes. |
 | initialFrom    | Determines from where to get the initial state: whether from your current query parameters(location) or from your redux state(state)                                                                                       |
 |                |
 
