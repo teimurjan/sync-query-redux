@@ -30,7 +30,7 @@ const syncer = new plainSync.Syncer(
   {
     parseQuery: true,
     stringifyState: true,
-    initialFrom: "state",
+    relyOn: "location",
     replaceState: true
   }
 );

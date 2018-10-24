@@ -3,57 +3,52 @@ import type { BrowserLocation as Location } from "history/createBrowserHistory";
 
 class HistoryListener {
   prevLocation: ?Location;
-  location: ?Location;
+  currentLocation: ?Location;
   _onPathnameChange: ?(prevLocation: ?Location, location: Location) => any;
   _onSearchChange: ?(prevLocation: ?Location, location: Location) => any;
 
   constructor() {
     this.prevLocation = undefined;
-    this.location = undefined;
+    this.currentLocation = undefined;
     this._onPathnameChange = undefined;
     this._onSearchChange = undefined;
-    this.listenPathname.bind(this);
-    this._hasSearchChanged.bind(this);
-    this.setOnPathnameChange.bind(this);
-    this.setOnSearchChange.bind(this);
   }
 
-  listenPathname(pathname: string) {
-    return (function(location: Location) {
-      this.location = location;
-      if (location.pathname === pathname) {
-        if (this._hasSearchChanged() && this._onSearchChange) {
-          this._onSearchChange(this.prevLocation, location);
-        }
-      } else if (
-        (this.prevLocation || {}).pathname === location.pathname &&
-        this._onPathnameChange
-      ) {
-        this._onPathnameChange(this.prevLocation, location);
-      }
-      this.location = undefined;
-      this.prevLocation = location;
-    }).bind(this);
-  }
+  listenTo = (pathname: string) => (location: Location) => {
+    this.currentLocation = location;
+    const isLocationMatches = location.pathname === pathname;
+    if (isLocationMatches && this._hasSearchChanged() && this._onSearchChange) {
+      this._onSearchChange(this.prevLocation, location);
+    } else if (this._hasPathnameChanged() && this._onPathnameChange) {
+      this._onPathnameChange(this.prevLocation, location);
+    }
+    this.currentLocation = undefined;
+    this.prevLocation = location;
+  };
 
-  _hasSearchChanged() {
+  _hasSearchChanged = () => {
     const isSearchChanged =
-      !!this.location &&
+      !!this.currentLocation &&
       !!this.prevLocation &&
-      this.location.search !== this.prevLocation.search;
-    const isNewLocation = !this.prevLocation && !!this.location;
+      this.currentLocation.search !== this.prevLocation.search;
+    const isNewLocation = !this.prevLocation && !!this.currentLocation;
     return isSearchChanged || isNewLocation;
-  }
+  };
 
-  setOnPathnameChange(
+  _hasPathnameChanged = () =>
+    (this.prevLocation || {}).pathname !== (this.currentLocation || {}).pathname;
+
+  setOnPathnameChange = (
     cb: (prevLocation: ?Location, location: Location) => any
-  ) {
+  ) => {
     this._onPathnameChange = cb;
-  }
+  };
 
-  setOnSearchChange(cb: (prevLocation: ?Location, location: Location) => any) {
+  setOnSearchChange = (
+    cb: (prevLocation: ?Location, location: Location) => any
+  ) => {
     this._onSearchChange = cb;
-  }
+  };
 }
 
 export default HistoryListener;

@@ -19,14 +19,13 @@ class Sync {
     this._history = history;
     this._syncer = syncer;
     this._lastQueryString = undefined;
-    this.sync.bind(this);
   }
 
-  _onPathnameChange(prevLocation: ?Location, location: Location) {
+  _onPathnameChange = (prevLocation: ?Location, location: Location) => {
     this._lastQueryString = undefined;
-  }
+  };
 
-  _onSearchChange(prevLocation: ?Location, location: Location) {
+  _onSearchChange = (prevLocation: ?Location, location: Location) => {
     const isFirstChange = this._lastQueryString === undefined;
     const shouldStartFromState =
       isFirstChange && this._syncer.options.relyOn === "state";
@@ -34,24 +33,24 @@ class Sync {
       return;
     }
 
-    const q = this._syncer.options.parseQuery
-      ? qs.parse(location.search)
-      : location.search;
-    this._store.dispatch(this._syncer.actionCreator(q));
+    this._store.dispatch(
+      this._syncer.actionCreator(this._getNewValueFromSearch())
+    );
 
     this._lastQueryString = location.search;
-  }
+  };
 
-  _onStateChange() {
+  _getNewValueFromSearch = () =>
+    this._syncer.options.parseQuery
+      ? qs.parse(location.search)
+      : location.search;
+
+  _onStateChange = () => {
     if (this._history.location.pathname !== this._syncer.pathname) {
       return;
     }
 
-    const value = this._syncer.selector(this._store.getState());
-    const q = this._syncer.options.stringifyState
-      ? `?${qs.stringify(value)}`
-      : value;
-
+    const q = this._getNewQueryFromState();
     const next = this._syncer.options.replaceState
       ? this._history.replace
       : this._history.push;
@@ -62,23 +61,38 @@ class Sync {
     });
 
     this._lastQueryString = q;
-  }
+  };
 
-  sync() {
+  _getNewQueryFromState = () => {
+    const value = this._syncer.selector(this._store.getState());
+    return this._syncer.options.stringifyState
+      ? `?${qs.stringify(value)}`
+      : value;
+  };
+
+  start = () => {
     const historyListener = new HistoryListener();
-    historyListener.setOnPathnameChange(this._onPathnameChange.bind(this));
-    historyListener.setOnSearchChange(this._onSearchChange.bind(this));
+    historyListener.setOnPathnameChange(this._onPathnameChange);
+    historyListener.setOnSearchChange(this._onSearchChange);
 
     const stopListeningHistory = this._history.listen(
-      historyListener.listenPathname(this._syncer.pathname)
+      historyListener.listenTo(this._syncer.pathname)
     );
-    const unsubscribeFromStore = this._store.subscribe(this._onStateChange.bind(this));
+    const unsubscribeFromStore = this._store.subscribe(this._onStateChange);
 
-    return () => {
+    if (this._syncer.options.relyOn === "location") {
+      this._onSearchChange(undefined, this._history.location);
+    } else {
+      this._onStateChange();
+    }
+
+    this.stop = () => {
       stopListeningHistory();
       unsubscribeFromStore();
     };
-  }
+  };
+
+  stop = () => {};
 }
 
 export default Sync;
