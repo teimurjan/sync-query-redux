@@ -29,7 +29,7 @@ class Sync {
     const isFirstChange = this._lastQueryString === undefined;
     const shouldStartFromState =
       isFirstChange && this._syncer.options.relyOn === "state";
-    if (shouldStartFromState || location.state.ignore) {
+    if (shouldStartFromState || (location.state || {}).ignore) {
       return;
     }
 

@@ -35,7 +35,7 @@ const syncer = new plainSync.Syncer(
   }
 );
 const sync = new plainSync.Sync(store, history, syncer);
-sync.sync();
+sync.start();
 
 ReactDOM.render(
   <Provider store={store}>
