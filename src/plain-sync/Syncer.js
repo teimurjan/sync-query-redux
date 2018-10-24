@@ -12,7 +12,16 @@ type Options = {
   relyOn?: "location" | "state"
 };
 
-class Syncer {
+interface ISyncer {
+  constructor(
+    pathname: string,
+    actionCreator: ActionCreator,
+    selector: Selector,
+    options: ?Options,
+  ): void;
+}
+
+class Syncer implements ISyncer {
   pathname: string;
   actionCreator: ActionCreator;
   selector: Selector;
@@ -22,12 +31,12 @@ class Syncer {
     pathname: string,
     actionCreator: ActionCreator,
     selector: Selector,
-    options: Options = {}
+    options: ?Options
   ) {
     this.pathname = pathname;
     this.actionCreator = actionCreator;
     this.selector = selector;
-    this.options = options;
+    this.options = options || {};
   }
 }
 

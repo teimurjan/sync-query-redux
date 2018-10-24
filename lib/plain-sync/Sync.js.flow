@@ -8,7 +8,12 @@ import type { Store } from "redux";
 import Syncer from "./Syncer";
 import HistoryListener from "./HistoryListener";
 
-class Sync {
+interface ISync {
+  constructor(store: Store<any, any>, history: History, syncer: Syncer): void;
+  start(): Function;
+}
+
+class Sync implements ISync {
   _store: Store<any, any>;
   _history: History;
   _syncer: Syncer;
