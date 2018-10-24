@@ -51,18 +51,22 @@ class Sync implements ISync {
 
   _onStateChange = () => {
     const isPathnameMatches =
-      this._history.location.pathname !== this._syncer.pathname;
-    if (isPathnameMatches || this._state.isProcessing) {
+      this._history.location.pathname === this._syncer.pathname;
+    if (!isPathnameMatches || this._state.isProcessing) {
       return;
     }
 
+    const q = this._getNewQueryFromState();
+    if (q === this._history.location.search) {
+      return
+    }
     const next = this._syncer.options.replaceState
       ? this._history.replace
       : this._history.push;
     this._process(() =>
       next({
         pathname: this._history.location.pathname,
-        search: this._getNewQueryFromState()
+        search: q,
       })
     );
   };
