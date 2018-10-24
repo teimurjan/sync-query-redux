@@ -23,23 +23,19 @@ const store = createStore(rootReducer, applyMiddleware(loggerMiddleware));
 
 export const PLAIN_SYNC_PATH = `${process.env.PUBLIC_URL}/plain-sync`;
 
-plainSync(
-  store,
-  [
-    {
-      pathname: PLAIN_SYNC_PATH,
-      actionCreator: setCounter,
-      selector: state => ({ counter: state.plainSyncCounter }),
-      parseQuery: true,
-      stringifyState: true,
-      initialFrom: "state",
-      replaceState: true
-    }
-  ],
+const syncer = new plainSync.Syncer(
+  PLAIN_SYNC_PATH,
+  setCounter,
+  state => ({ counter: state.plainSyncCounter }),
   {
-    history
+    parseQuery: true,
+    stringifyState: true,
+    initialFrom: "state",
+    replaceState: true
   }
 );
+const sync = new plainSync.Sync(store, history, syncer);
+sync.sync();
 
 ReactDOM.render(
   <Provider store={store}>
