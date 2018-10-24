@@ -17,48 +17,54 @@ class Sync implements ISync {
   _store: Store<any, any>;
   _history: History;
   _syncer: Syncer;
-  _lastQueryString: ?string;
+  _state: {
+    isProcessing: boolean
+  };
 
   constructor(store: Store<any, any>, history: History, syncer: Syncer) {
     this._store = store;
     this._history = history;
     this._syncer = syncer;
-    this._lastQueryString = undefined;
+    this._state = {
+      isProcessing: false
+    };
   }
 
-  _onPathnameChange = (prevLocation: ?Location, location: Location) => {
-    this._lastQueryString = undefined;
+  _process = (cb: Function) => {
+    this._state.isProcessing = true;
+    cb();
+    this._state.isProcessing = false;
   };
 
   _onSearchChange = (prevLocation: ?Location, location: Location) => {
-    if ((location.state || {}).ignore) {
+    if (this._state.isProcessing) {
       return;
     }
     const newValue = this._getNewValueFromSearch(location.search.slice(1));
-    this._store.dispatch(this._syncer.actionCreator(newValue));
-
-    this._lastQueryString = location.search;
+    this._process(() =>
+      this._store.dispatch(this._syncer.actionCreator(newValue))
+    );
   };
 
   _getNewValueFromSearch = (search: string) =>
     this._syncer.options.parseQuery ? qs.parse(search) : search;
 
   _onStateChange = () => {
-    if (this._history.location.pathname !== this._syncer.pathname) {
+    const isPathnameMatches =
+      this._history.location.pathname !== this._syncer.pathname;
+    if (isPathnameMatches || this._state.isProcessing) {
       return;
     }
 
-    const q = this._getNewQueryFromState();
     const next = this._syncer.options.replaceState
       ? this._history.replace
       : this._history.push;
-    next({
-      pathname: this._history.location.pathname,
-      search: q,
-      state: { ignore: true }
-    });
-
-    this._lastQueryString = q;
+    this._process(() =>
+      next({
+        pathname: this._history.location.pathname,
+        search: this._getNewQueryFromState()
+      })
+    );
   };
 
   _getNewQueryFromState = () => {
@@ -70,18 +76,18 @@ class Sync implements ISync {
 
   start = () => {
     const historyListener = new HistoryListener();
-    historyListener.setOnPathnameChange(this._onPathnameChange);
     historyListener.setOnSearchChange(this._onSearchChange);
-
     const stopListeningHistory = this._history.listen(
       historyListener.listenTo(this._syncer.pathname)
     );
     const unsubscribeFromStore = this._store.subscribe(this._onStateChange);
 
-    if (this._syncer.options.relyOn === "location") {
-      this._onSearchChange(undefined, this._history.location);
-    } else {
-      this._onStateChange();
+    if (this._syncer.pathname === this._history.location.pathname) {
+      if (this._syncer.options.relyOn === "location") {
+        this._onSearchChange(undefined, this._history.location);
+      } else {
+        this._onStateChange();
+      }
     }
 
     return () => {
