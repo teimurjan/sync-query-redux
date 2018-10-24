@@ -1,4 +1,4 @@
 {
-  "presets": ["flow", "es2017"],
+  "presets": ["flow", "es2015"],
   "plugins": ["transform-flow-strip-types", "transform-object-rest-spread", "transform-class-properties"]
 }

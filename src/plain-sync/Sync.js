@@ -26,24 +26,17 @@ class Sync {
   };
 
   _onSearchChange = (prevLocation: ?Location, location: Location) => {
-    const isFirstChange = this._lastQueryString === undefined;
-    const shouldStartFromState =
-      isFirstChange && this._syncer.options.relyOn === "state";
-    if (shouldStartFromState || (location.state || {}).ignore) {
+    if ((location.state || {}).ignore) {
       return;
     }
-
-    this._store.dispatch(
-      this._syncer.actionCreator(this._getNewValueFromSearch())
-    );
+    const newValue = this._getNewValueFromSearch(location.search.slice(1));
+    this._store.dispatch(this._syncer.actionCreator(newValue));
 
     this._lastQueryString = location.search;
   };
 
-  _getNewValueFromSearch = () =>
-    this._syncer.options.parseQuery
-      ? qs.parse(location.search)
-      : location.search;
+  _getNewValueFromSearch = (search: string) =>
+    this._syncer.options.parseQuery ? qs.parse(search) : search;
 
   _onStateChange = () => {
     if (this._history.location.pathname !== this._syncer.pathname) {
@@ -86,13 +79,11 @@ class Sync {
       this._onStateChange();
     }
 
-    this.stop = () => {
+    return () => {
       stopListeningHistory();
       unsubscribeFromStore();
     };
   };
-
-  stop = () => {};
 }
 
 export default Sync;

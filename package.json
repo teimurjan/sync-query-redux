@@ -1,6 +1,6 @@
 {
   "name": "sync-query-redux",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "description": "Synchronise redux state with URL query parameters.",
   "main": "lib/index.js",
   "scripts": {
@@ -35,10 +35,9 @@
     "babel-core": "^6.26.3",
     "babel-jest": "^23.4.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-es2015-arrow-functions": "^6.22.0",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-es2017": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
     "babel-preset-flow": "^6.23.0",
     "flow-bin": "^0.78.0",
     "flow-copy-source": "^2.0.2",
