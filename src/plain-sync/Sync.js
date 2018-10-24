@@ -19,9 +19,6 @@ class Sync {
     this._history = history;
     this._syncer = syncer;
     this._lastQueryString = undefined;
-    this._onPathnameChange.bind(this);
-    this._onSearchChange.bind(this);
-    this._onStateChange.bind(this);
     this.sync.bind(this);
   }
 
@@ -69,13 +66,13 @@ class Sync {
 
   sync() {
     const historyListener = new HistoryListener();
-    historyListener.setOnPathnameChange(this._onPathnameChange);
-    historyListener.setOnSearchChange(this._onSearchChange);
+    historyListener.setOnPathnameChange(this._onPathnameChange.bind(this));
+    historyListener.setOnSearchChange(this._onSearchChange.bind(this));
 
     const stopListeningHistory = this._history.listen(
       historyListener.listenPathname(this._syncer.pathname)
     );
-    const unsubscribeFromStore = this._store.subscribe(this._onStateChange);
+    const unsubscribeFromStore = this._store.subscribe(this._onStateChange.bind(this));
 
     return () => {
       stopListeningHistory();

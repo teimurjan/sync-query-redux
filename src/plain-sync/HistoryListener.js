@@ -19,7 +19,7 @@ class HistoryListener {
   }
 
   listenPathname(pathname: string) {
-    return function(location: Location) {
+    return (function(location: Location) {
       this.location = location;
       if (location.pathname === pathname) {
         if (this._hasSearchChanged() && this._onSearchChange) {
@@ -33,7 +33,7 @@ class HistoryListener {
       }
       this.location = undefined;
       this.prevLocation = location;
-    };
+    }).bind(this);
   }
 
   _hasSearchChanged() {
