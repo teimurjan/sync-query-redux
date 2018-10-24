@@ -1,4 +1,4 @@
 // @flow
-import plainSync from "./plain-sync";
+import * as plainSync from "./plain-sync";
 
 export { plainSync };
