@@ -1,14 +1,12 @@
 language: node_js
 node_js:
   - "11"
-install:
-  - npm install -g codecov
 deploy:
   provider: npm
   email: $NPM_EMAIL
   api_key: $NPM_TOKEN
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
+after_deploy:
+- bash <(curl -s https://codecov.io/bash)
 branches:
   only:
     - master
