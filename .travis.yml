@@ -3,8 +3,8 @@ node_js:
 - '11'
 deploy:
   provider: npm
-  email: teymurgg321@gmail.com
-  api_key: $API_TOKEN
+  email: $NPM_EMAIL
+  api_key: $NPM_TOKEN
 branches:
   only:
   - master
