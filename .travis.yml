@@ -7,8 +7,7 @@ cache:
 deploy:
   provider: script
   script: "cp .npmrc.template $HOME/.npmrc && npm publish"
-  email: "teymurgg321@gmail.com"
-  api_key: "IBJjCu8XQR3ma3eEfm6qH8kNClu2qVC/XvikFADOfRXMxiJCJ3u5W62w6Sdf0UnSePOprqAKJLzhYYdo+t3hJ1FIXm2GXzYNJvryx7iE9YapdU8HSSQcg5goZv3Kdv2wfJ4ewWG6Ap8n1VZBjkw2eIyiBX32iD/EZ74/SJc1l3lklIWbTrp44C0YhGbrRUSV8xTakrPtFO6UGqmw9iV/n1KEwVUdMBIyuJ4/7RSLlUiRcdHAxnVj9lwaYSCNHtCZHzS7tPMlPzPKWpTGKCV5nW0HG3xfIFKoofGwgRklhlOKRpwNLG9Mh91G7Q4IFyGjlD13nYCoyQ9qPljYh8zR9HqQhfvcgVhSSphPxOO0/RP4VaDluYZXMRu9sqYJcv33WlQldOf6O+tAaPYF73MCPBaN/JwlgwSvo1u174oA+xxJfkjzkbXbzSww3KtG2/LPGyHaaaPgmqINKquujR+RL7PfPKs88I6ZZJLGPFIY/HZ6YMUlgrEbwb9g2alxy09I/2NRmArgfOurZpbg8Xf0x9PfrJv7q9GhRFJMbvo52+lXlUeEQRwhGaaDxMdttYf0HXgkD1s+FXSqNigaEV2oFv4+AaVQSkYuHWEesfs9IszNE1gXf6hveFX1LSo2ESnKJmJdzomR2TElNxs2KQG3f2UESjPLVd7K7euyD/KUvZA="
+  skip_cleanup: true
 branches:
   only:
     - master
