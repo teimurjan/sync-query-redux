@@ -5,7 +5,7 @@ type ActionCreator = (
 
 type Selector = (state: Object) => any;
 
-type Options = {
+export type Options = {
   parseQuery?: boolean,
   stringifyState?: boolean,
   replaceState?: boolean,

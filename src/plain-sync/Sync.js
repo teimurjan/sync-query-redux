@@ -13,6 +13,11 @@ interface ISync {
   start(): Function;
 }
 
+export const getSearchFromObject = (obj: Object) => {
+  const search = qs.stringify(obj);
+  return search.length > 0 ? `?${search}` : "";
+};
+
 class Sync implements ISync {
   _store: Store<any, any>;
   _history: History;
@@ -56,9 +61,10 @@ class Sync implements ISync {
       return;
     }
 
-    const q = this._getNewQueryFromState();
-    if (q === this._history.location.search) {
-      return
+    const stateValue = this._syncer.selector(this._store.getState());
+    const search = getSearchFromObject(stateValue);
+    if (search === this._history.location.search) {
+      return;
     }
     const next = this._syncer.options.replaceState
       ? this._history.replace
@@ -66,16 +72,9 @@ class Sync implements ISync {
     this._process(() =>
       next({
         pathname: this._history.location.pathname,
-        search: q,
+        search: this._syncer.options.stringifyState ? search : stateValue
       })
     );
-  };
-
-  _getNewQueryFromState = () => {
-    const value = this._syncer.selector(this._store.getState());
-    return this._syncer.options.stringifyState
-      ? `?${qs.stringify(value)}`
-      : value;
   };
 
   start = () => {
