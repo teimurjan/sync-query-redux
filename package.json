@@ -57,7 +57,7 @@
       "^.+\\.(js)$": "<rootDir>/node_modules/babel-jest"
     },
     "testMatch": [
-      "<rootDir>/__tests__/**/*.test.js"
+      "<rootDir>/src/**/*.test.js"
     ]
   }
 }

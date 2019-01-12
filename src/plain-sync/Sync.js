@@ -82,7 +82,7 @@ class Sync implements ISync {
     const historyListener = new HistoryListener();
     historyListener.setOnSearchChange(this._onSearchChange);
     const stopListeningHistory = this._history.listen(
-      historyListener.listenTo(this._syncer.pathname)
+      historyListener.getListenerFunc(this._syncer.pathname)
     );
     const unsubscribeFromStore = this._store.subscribe(this._onStateChange);
 
