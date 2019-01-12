@@ -6,6 +6,7 @@
 [![npm](https://img.shields.io/npm/v/sync-query-redux.svg)](https://www.npmjs.com/package/sync-query-redux)
 ![npm bundle size (minified + gzip)](https://img.shields.io/bundlephobia/minzip/sync-query-redux.svg)
 [![Build Status](https://travis-ci.org/teimurjan/sync-query-redux.svg?branch=master)](https://travis-ci.org/teimurjan/sync-query-redux)
+[![codecov](https://codecov.io/gh/teimurjan/sync-query-redux/branch/master/graph/badge.svg)](https://codecov.io/gh/teimurjan/sync-query-redux)
 
 </div>
 
