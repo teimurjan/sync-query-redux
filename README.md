@@ -1,9 +1,13 @@
-# sync-query-redux
+<div align="center">
+
+![](docs/images/logo.png)
 
 [![GitHub license](https://img.shields.io/github/license/teimurjan/sync-query-redux.svg)](https://github.com/teimurjan/sync-query-redux/blob/master/LICENSE.md)
 [![npm](https://img.shields.io/npm/v/sync-query-redux.svg)](https://www.npmjs.com/package/sync-query-redux)
 ![npm bundle size (minified + gzip)](https://img.shields.io/bundlephobia/minzip/sync-query-redux.svg)
+[![Build Status](https://travis-ci.org/teimurjan/sync-query-redux.svg?branch=master)](https://travis-ci.org/teimurjan/sync-query-redux)
 
+</div>
 
 The library is created for easily synchronization between URL query params and redux state.
 Inspired by [redux-query-sync](https://github.com/Treora/redux-query-sync).
