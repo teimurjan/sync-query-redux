@@ -5,9 +5,9 @@ cache:
   directories:
   - node_modules
 deploy:
-  provider: script
-  script: cp .npmrc.template $HOME/.npmrc && npm publish
-  skip_cleanup: true
+  provider: npm
+  email: teymurgg321@gmail.com
+  api_key: $API_TOKEN
 branches:
   only:
   - master
