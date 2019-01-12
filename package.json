@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "flow && node ./scripts/test.js --env=jsdom",
-    "build": "flow && rm -rf lib && npm run prepack:babel && npm run prepack:flow",
+    "build": "flow && test && rm -rf lib && npm run prepack:babel && npm run prepack:flow",
     "prepack": "npm run build",
     "prepack:babel": "babel src/ -d lib",
     "prepack:flow": "flow-copy-source src lib"
