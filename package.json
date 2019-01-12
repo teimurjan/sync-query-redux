@@ -5,10 +5,11 @@
   "main": "lib/index.js",
   "scripts": {
     "test": "flow && node ./scripts/test.js --env=jsdom",
-    "build": "flow && npm run test --coverage && rm -rf lib && npm run prepack:babel && npm run prepack:flow",
+    "build": "rm -rf lib && npm run prepack:babel && npm run prepack:flow",
     "prepack": "npm run build",
     "prepack:babel": "babel src/ -d lib",
-    "prepack:flow": "flow-copy-source src lib"
+    "prepack:flow": "flow-copy-source src lib",
+    "deploy": "npm run test && npm run build"
   },
   "repository": {
     "type": "git",
