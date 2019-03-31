@@ -6,7 +6,7 @@ deploy:
   email: $NPM_EMAIL
   api_key: $NPM_TOKEN
 after_deploy:
-  - bash <(curl -s https://codecov.io/bash)
+  - codecov --token="$CODECOV_TOKEN"
 branches:
   only:
     - master
