@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { increment, decrement } from "./actions";
-import { LISTENING_PATH } from ".";
 
 class PlainSync extends Component {
   render() {

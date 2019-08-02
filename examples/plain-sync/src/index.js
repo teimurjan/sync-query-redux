@@ -5,13 +5,13 @@ import { createStore, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import { createLogger } from "redux-logger";
 import { plainSync } from "sync-query-redux";
-import createHistory from "history/createBrowserHistory";
+import { createBrowserHistory } from "history";
 import App from "./App";
 import { setCounter } from "./PlainSyncDemo/actions";
 import { rootReducer } from "./reducer";
 import "./index.css";
 
-const history = createHistory();
+const history = createBrowserHistory();
 
 const loggerMiddleware = createLogger({
   level: "info",
