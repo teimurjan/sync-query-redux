@@ -115,8 +115,7 @@ interface ISync {
 ## Plans
 
 - [x] Add tests
-- [ ] Add module params-sync in which `Sync` will not have selector and actionCreator, but a list of params where each param will have its selector and its actionCreator.
-- [ ] Make library available as a redux middleware
+- [ ] Add hooks support
 
 ## Contributions
 
